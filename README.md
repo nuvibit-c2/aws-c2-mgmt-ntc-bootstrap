@@ -17,13 +17,13 @@ The NTC Implementation Blueprints provide a complete, production-ready example o
 
 ## 📋 Purpose of This Repository
 
-This repository (`aws-c2-mgmt-ntc-bootstrap`) is the **one-time initial setup step** for a new NTC implementation. It is executed locally against the AWS Management Account to provision the foundational resources required by all subsequent NTC blueprint repositories:
+This repository (`aws-c2-mgmt-bootstrap`) is the **one-time initial setup step** for a new NTC implementation. It is executed locally against the AWS Management Account to provision the foundational resources required by all subsequent NTC blueprint repositories:
 
 - **State Storage**: Creates a secure, encrypted S3 bucket for storing Terraform/OpenTofu state files
 - **KMS Encryption**: Creates a KMS key for state file encryption at rest
 - **CI/CD Authentication**: Sets up an OIDC provider and IAM role so CI/CD pipelines can securely authenticate to AWS without static credentials
 
-> **Note**: This bootstrap is designed to be run once. The local state file (`bootstrap.tfstate`) can be safely discarded after a successful apply. All created resources are durable and do not depend on the state file for ongoing operation.
+> **Note**: This bootstrap is designed to be run once. The local state file (`bootstrap.tfstate`) can be safely discarded after a successful apply. All created resources will be imported at a later stage and do not depend on this state file for ongoing operation.
 
 
 ## 🚀 Quick Start
@@ -37,8 +37,8 @@ This repository (`aws-c2-mgmt-ntc-bootstrap`) is the **one-time initial setup st
 ### Step 1: Clone and Configure
 
 ```bash
-git clone <this-repository-url>
-cd aws-c2-mgmt-ntc-bootstrap
+git clone https://github.com/nuvibit-c2/aws-c2-mgmt-bootstrap.git
+cd aws-c2-mgmt-bootstrap
 ```
 
 Edit `bootstrap.auto.tfvars` with your configuration:
@@ -83,7 +83,7 @@ You are now ready to proceed with deploying the NTC blueprint repositories in or
 |---|---|---|
 | `region` | AWS region for bootstrap resources | *(required)* |
 | `state_bucket_name` | S3 bucket name for state storage | *(required)* |
-| `state_bucket_account_regional_namespace` | Use account-regional S3 namespace | `true` |
+| `state_bucket_account_regional_namespace` | Use account-regional S3 namespace | *(required)* |
 | `oidc_provider_url` | OIDC provider URL | *(required)* |
 | `oidc_client_id_list` | OIDC audience / client IDs | `["sts.amazonaws.com"]` |
 | `oidc_role_name` | IAM role name for CI/CD | `"ntc-oidc-github-role"` |
@@ -118,7 +118,7 @@ The NTC Implementation Blueprints consist of multiple repositories, each managin
 
 ### Bootstrap
 
-#### 0. [aws-c2-mgmt-ntc-bootstrap](https://github.com/nuvibit-c2/aws-c2-mgmt-ntc-bootstrap) ← *You are here*
+#### 0. [aws-c2-mgmt-bootstrap](https://github.com/nuvibit-c2/aws-c2-mgmt-bootstrap) ← *You are here*
 **Purpose**: One-time initial setup for a new NTC implementation
 **Creates**: S3 state bucket, KMS encryption key, OIDC provider and IAM role for CI/CD
 
@@ -161,7 +161,7 @@ The NTC Implementation Blueprints consist of multiple repositories, each managin
 
 The blueprint repositories should be deployed in the following order:
 
-0. **aws-c2-mgmt-ntc-bootstrap** ← *You are here* (one-time local apply)
+0. **aws-c2-mgmt-bootstrap** ← *You are here* (one-time local apply)
 1. **aws-c2-mgmt-organizations** (creates organization structure)
 2. **aws-c2-mgmt-account-factory** (creates core accounts)
 3. **aws-c2-mgmt-identity-center** (creates SSO permissions)
