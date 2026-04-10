@@ -26,7 +26,7 @@ data "tls_certificate" "oidc_provider_cert" {
 locals {
   current_account_id = data.aws_caller_identity.current.account_id
   kms_key_arn        = aws_kms_key.ntc_state_bucket_encryption.arn
-  oidc_provider      = trimsuffix(trimprefix(var.oidc_configuration.provider_url, "https://"), "/")
+  oidc_provider      = trimprefix(var.oidc_configuration.provider_url, "https://")
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
